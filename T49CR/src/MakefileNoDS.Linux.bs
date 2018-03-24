@@ -1,0 +1,139 @@
+#################################################################################
+#
+# Makefile for Linux to produce libT49ANA.so 
+#
+#################################################################################
+
+###
+# Name definitions
+###
+PREFIX     = ../
+NAME       = T49ANA
+SHLIB      = $(PREFIX)lib/lib$(NAME).so
+
+###
+# Libraries
+###
+ROOTLIBS   = $(shell root-config --libs  | sed 's/-lpthread //')
+ROOTGLIBS  = $(shell root-config --glibs | sed 's/-lpthread //') -lGX11 -lMinuit
+T49DSTLIBS = -L$(T49DST_LIB) -lT49DST
+LIBS       = $(ROOTGLIBS)  \
+             $(T49DSTLIBS) 
+
+###
+# Contains the path to the include files
+###
+INCLUDE    = -I$(ROOTSYS)/include \
+             -I$(CINTSYSDIR)      \
+             -I$(T49)/inc         \
+             -I$(T49DST)/inc      \
+             -I../inc             
+INCDIR     = $(PREFIX)/inc
+SRCDIR     = $(PREFIX)/src
+VPATH      = $(SRCDIR) $(INCDIR) 
+
+###
+# Dictionary for class integration in ROOT (needed for CINT)
+###
+DICT       = $(NAME)Dict
+LINKDEF    = $(NAME)LinkDef
+
+###
+# Compiler
+###
+CXX        = g++
+LD         = g++
+
+###
+# Flags
+###
+ROOTCFLAGS = $(shell root-config --cflags) 
+CXXFLAGS   = -O -Wall -fPIC 
+CXXFLAGS  += $(ROOTCFLAGS)
+CXXFLAGS  += -DNODS   
+LDFLAGS    = -g
+
+###
+# Dependencies
+###
+SOURCES    = $(wildcard T49*.C)
+OBJECTS    = $(filter-out $(DICT).o,$(SOURCES:.C=.o)) $(DICT).o
+HEADER     = PhysConst.h       \
+             T49Cut.h          \
+             T49CutEvent.h     \
+             T49CutTrack.h     \
+             T49Cut2Track.h    \
+             T49CutV0.h        \
+             T49CutPid.h       \
+             T49Dedx.h         \
+             T49DedxFunction.h \
+             T49DedxInfo.h     \
+             T49InMuDST.h      \
+             T49Mixing.h       \
+             T49Mixer.h        \
+             T49Prob.h         \
+             T49Proj1.h        \
+             T49Proj2.h        \
+             T49Tool.h         \
+             T49Histogram.h    \
+             T49Histogram1D.h  \
+             T49Histogram2D.h  \
+             T49Histogram3D.h  \
+             T49Container.h    \
+             T49Index.h        \
+             T49OnePeak.h      \
+             T49SumGaus.h      \
+             T49Trkstep.h      \
+             T49Padtrans.h     \
+             T49XiFinder.h     \
+             T49CrContainer.h    \
+             T49CrDedx.h         \
+             T49CrCut.h          \
+             T49CrIndex.h        \
+             T49CrInfo.h        \
+             T49CrParticle.h     \
+             T49ANALinkDef.h
+
+###
+# Target definitions
+###
+.PHONY: all clean 
+
+all: 	
+	$(MAKE) -f MakefileNoDS.Linux $(SHLIB)
+
+$(SHLIB): $(OBJECTS)
+	$(CXX) -shared -o $(SHLIB)  $(OBJECTS) 
+
+$(DICT).C: $(HEADER)
+	@echo "Generating dictionary $(NAME)Dict.C"
+	$(ROOTSYS)/bin/rootcint -f $(DICT).C -c $(INCLUDE) $(HEADER)
+
+clean:
+	rm -f $(OBJECTS) *Dict.* $(SHLIB)  core *~
+
+.c.o:
+	cc $(CFLAGS) $(ANSI) $(INCLUDE) -c  $*.c
+
+.cpp.o:
+	$(CXX)   $(CXXFLAGS) $(INCLUDE) -c  $*.C
+
+.C.o:
+	$(CXX)   $(CXXFLAGS) $(INCLUDE) -c  $*.C
+
+.cc.o:
+	$(CXX)   $(CXXFLAGS) $(INCLUDE) -c  $*.cc
+
+.f.o:
+	$(FF)    $(FFLAGS)   $(INCLUDE) -c  $*.f
+
+
+
+
+
+
+
+
+
+
+

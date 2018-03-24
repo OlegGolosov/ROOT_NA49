@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta name="keywords" content=
+  "NA49 ROOT mini DST mini-DST Analysis CERN" />
+
+  <title>Installation</title>
+  <!-- Changed by: Christoph Blume, 12-Dec-2002 -->
+
+  <style type="text/css">
+/*<![CDATA[*/
+  <!--
+  .style1 {
+  color: #0000FF;
+  font-size: 30px;
+  }
+  .style2 {
+  color: #FF0000;
+  font-weight: bold;
+  }
+  .style3 {color: #0000FF}
+  -->
+  /*]]>*/
+  </style>
+</head>
+
+<body bgcolor="#FFFFFF">
+  <p><br /></p>
+
+  <p><b><a name="link2" class="style1" id=
+  "link2">Installation</a></b></p>
+
+  <p class="style2">WARNING: Please note the mix between NA49 and
+  NA61 variables.</p>
+
+  <h2><span class="style3">Simple use of root61</span></h2>
+
+  <p>The <a href="dst/html/USER_Index.html">T61DST</a> and <a href=
+  "ana/html/USER_Index.html">T61ANA</a> libraries are part of the
+  local-branch of the NA61-library and can be used logging on the
+  lxplus machines at CERN <span class="style2">using NA61
+  account</span>.</p>
+
+  <p>Simply make sure the that the NA61-environmentals are all set:</p>
+  <pre>
+       setenv NA49_LEVEL v2r2-1d
+       source $NA49/$NA49_LEVEL/etc/na61env.csh
+</pre>
+
+  <p>Now you can use the precompiled version simply typing</p>
+  <pre>
+	    root61
+</pre>
+
+  <h2>Running your macros in compiled mode</h2>
+
+  For quite some time ROOT has been making it possible to quickly
+  compile your macros before execution instead of having them parsed
+  line by line by CINT. This mode offered a number of advantages
+  over running macros in interpreted mode:
+  <ul>
+    <li>compiled code runs <b>much</b> faster;</li>
+    <li>many bugs or typos can be caught quickly at compile time,
+      whereas the interpreter would only report them upon reaching
+      the offending line in the macro - or not report them at all,
+      leaving finding the problem to the user;</li>
+    <li>
+    <li>if you don't modify your source code between executions
+      the code is not recompiled, meaning that the more times you
+      run it the smaller the compiler overhead becomes;</li>
+    <li>in the vast majority of cases, macros which can be run
+    in compiled mode still work fine in interpreted mode.</li>
+  </ul>
+  The drawbacks on the other hands are few:
+  <ul>
+    <li>there is, naturally, some overhead associated with compiling
+    the code before execution if it's been changed since the last
+    time; in the worst case, if you modify your macro between every
+    execution it will have to be recompiled every time you run it.
+    However, this overhead is typically very small for modern
+    computers (if your macro is so large it makes a significant
+    difference you might consider reorganising your code), not to
+    mention the speed increase of actual execution can more than
+    make up for it;</li>
+    <li>in order for your macro to run in compiled mode you must
+    make it "proper" C++, doing without all shortcuts and hacks
+    offered by the interpreter; in particular, you will need to
+    explicitly include all the relevant header files, and loading or
+    executing other macros from your macro is somewhat more
+    restrictive (but still possible!). Many consider this requirement
+    to be a feature rather than a problem, as it helps one write
+    somewhat cleaner code;</li>
+    <li>a bit of extra initial configuration is necessary in order
+    to support compiled mode for third-party ROOT packages, such
+    as T61.</li>
+  </ul>
+  In order to run your T61 macros in compiled mode, do the following:
+  <ol>
+    <li>Add the following to your ROOT logon file
+      (<i>$HOME/.rootlogon.C</i> under Linux/Unix:
+      <pre>{
+	if (TString(gSystem->GetLibraries()).Contains("libT61DST.so"))
+        	gSystem->AddIncludePath("-I$T61/T61DST/inc");
+	if (TString(gSystem->GetLibraries()).Contains("libT61ANA.so"))
+		gSystem->AddIncludePath("-I$T61/T61ANA/inc");
+	if (TString(gSystem->GetLibraries()).Contains("libRootDS.so"))
+		gSystem->AddIncludePath("-I$T61/RootDS/inc");
+}
+</pre>
+      (assuming the environmental variable T61 points to where T61 is)
+      in order to allow ROOT to find T61 header files;</li>
+    <li>if your macro loads any other macros using the following syntax:
+      <pre>	gROOT->LoadMacro("macro.C")</pre>
+      you will have to use
+      <pre>	gROOT->ProcessLine(".x macro.C")</pre>
+      instead;</li>
+    <li>if there is any code you would like to use only in compiled
+      mode, enclose it in such preprocessor conditions:
+      <pre>#if !defined(__CINT__) || defined(__MAKECINT__)
+// your code here
+#endif
+</pre></li>
+    <li>Finally, to execute your macros in compiled mode append <i>+O</i>
+      (to enable speed optimisations), <i>+g</i> (to include debugging
+      symbols) or just <i>+</i> (inbetween: no optimisations, no debugging
+      symbols) to the name of the relevant macro file, like this:
+      <pre>	$ root -q -b 'mymacro.C+O("arg1", "arg2")'
+	root [0] .x macros.C+g
+	gROOT->LoadMacro("fit_util.C+");
+	(and so on...)
+</pre>
+  </ol>
+  For more information, look for "ACLiC" in ROOT documentation.
+
+  <h2><span class="style3">Local installation</span></h2>
+
+  <p>If you want to install T61 locally on lxPlus to be able to
+  modify the code ad recompile it, or just to install it outside lxPlus,
+  this can be done easily using <span class="style2">Subversion</span>.
+  All you need is a CERN account associated with NA61; once you've got
+  it, you can download the sources from both inside and outside the
+  CERN network. Alternatively, in the T61/dist-directory of the
+  NA61-library (local-branch) you can find the file T61.tar.gz. Note
+  however that Subversion is now the preferred way of accessing T61
+  sources and such source packages might be out of date.</p>
+
+  <p>Check out the code simply typing</p>
+  <pre>
+       svn co svn+ssh://&lt;username&gt;@svn.cern.ch/reps/na61soft/trunk/Reconstruction/T61
+</pre>
+
+  <p>Now, to compile the code it is enough to type</p>
+  <pre>
+       cd T61
+       make 
+</pre>
+  (if you don't want to or can't build the DSPACK support library, run
+  <i>make nods</i>) instead).
+
+  If everything goes fine you will find root61 in T61/bin, libT61DST.so
+  in T61/T61DST/lib, libT61ANA.so in T61ANA/lib and libRootDS.so (unless
+  built in "nods" mode) in T61/RootDS/lib.
+
+  <p>In order to run T61 from this location set the environment
+  variable <i>T61</i> so that it points to it, i.e.:</p>
+  <pre>
+       setenv T61 &lt;your topdirectory&gt;T61
+</pre>
+
+  <p>Then source the macro:</p>
+  <pre>
+       source  $T61/macro/T61_env.csh
+</pre>
+
+  <p>Last but not least, if you use mini-DST copies somewhere
+    else than at CERN and want to use them by run tag rather than
+   file names, you have to define ROOT61 accordingly:</li>
+  </ul>
+  <pre>
+       setenv ROOT61     &lt;your directory containing .root49dsts&gt;
+  </pre>
+
+  <center>
+    <hr />
+    <font size="-1"><a href="http://www.cern.ch/">CERN</a> © 2007 -
+    European Laboratory for Particle Physics - NA61</font>
+    <hr />
+  </center>
+</body>
+</html>

@@ -1,0 +1,122 @@
+#include <iostream.h>
+#include <unistd.h>   // for sleep()
+#include <stdlib.h>   // for atoi()
+#include <math.h>
+
+#include "T49CrCut.h"
+
+//*-*-* ROOT includes
+
+#include "TROOT.h"
+#include "Rtypes.h"
+
+#include "PhysConst.h"
+#include "T49ParticleRoot.h"
+#include "T49EventRoot.h"
+#include "T49Vertex.h"
+
+////////////////////////////////////////////////////////////////////    
+
+////////////////////////////////////////////////////////////////////    
+
+////////////////////////////////////////////////////////////////////
+
+ClassImp(T49CrCut)
+
+T49CrCut::T49CrCut()
+{
+}
+
+///////////////////////// init //////////////////////
+
+Int_t T49CrCut::Init() 
+{
+    cerr << "T49CrCut::init() has been called" << endl;
+
+    cerr << "T49CrCut::init() has finished" << endl;
+
+    return kTRUE;
+}
+
+Double_t T49CrCut::EventCut(T49EventRoot *e)
+{
+  // primary vertex position cut
+  if(fabs(e->GetVertexZ()-(-578.9))>0.5 || e->GetVertexZ()==-579.01)
+    return 0;
+
+     // leave out cuts on X and Y for now
+     //     || e->GetVertexX()<-0.12 || e->GetVertexX()>0.02
+     //     || e->GetVertexY()<-0.06 || e->GetVertexY()>0.11)
+     // want to check vertex_fit.iflag, but not in mini-dst
+     //   check for default values of x,y, or z instead to indicate
+     //failed fit
+
+  return 1;
+}
+
+Double_t T49CrCut::IsGoodTrack(T49ParticleRoot *p)
+{
+  if(// p->GetIflag()!=0 ||
+     p->GetIflag() & 0xF000000 ||
+      ((p->GetNPoint(0)+p->GetNPoint(1))==0 &&
+       (p->GetNMaxPoint(0)>10||p->GetNMaxPoint(1)>10)) ||
+      p->GetNPoint(2)<30 )
+    return 0;
+ return 1;
+}
+/*
+  Double_t T49CrCut::IsEbETrack(T49ParticleRoot *p)
+  {
+  //cut on MTPC tracks
+  if( p->GetIflag()!=0 ||
+  ((p->GetNPoint(0)+p->GetNPoint(1))==0 &&
+  (p->GetNMaxPoint(0)>10||p->GetNMaxPoint(1)>10)) ||
+  p->GetNPoint(2)<30 )
+  return 0;
+  return 1;
+  }
+  */
+Double_t T49CrCut::IsPrimary(T49ParticleRoot *p)
+{
+  Int_t talk = 0;
+  // make sure track has momentum
+  if( p->GetPz() <= 0 )
+    {
+      if(talk)printf("failed Pz cut!\n");
+      return 0;
+    }
+  // 
+  Int_t m1 = (p->GetNMaxPoint(0)>=10);
+  Int_t m2 = (p->GetNMaxPoint(1)>=10);
+  Int_t mm = (p->GetNMaxPoint(2)>=30);
+  if(!( (!m1 || (m1 && (p->GetNPoint(0)>=0.5*p->GetNMaxPoint(0)))) &&
+        (!m2 || (m2 && (p->GetNPoint(1)>=0.5*p->GetNMaxPoint(1)))) &&
+        (!mm || (mm && (p->GetNPoint(2)>=0.5*p->GetNMaxPoint(2)))) &&
+        (m1 || m2 || mm) ))
+    {
+      if(talk)printf("failed n_point cut!\n");
+      return 0;
+    }
+  // cut on impact parameter at primary vertex
+  if( fabs(p->GetBx())>4.0 || fabs(p->GetBy())>0.5 )
+    {
+      if(talk)printf("failed by cut!\n");
+      return 0;
+    }
+  return 1;
+}
+
+Int_t T49CrCut::EventMultiplicity(T49EventRoot *e)
+{
+  Int_t n=0;
+  TObjArray *parray = e->GetPrimaryParticles();
+  TIter piter(parray);
+  T49ParticleRoot *p;
+  Double_t pweight;
+  while((p=(T49ParticleRoot*)piter())) {
+    if((pweight = IsPrimary(p)) > 0) {
+      n++;
+    }
+  }
+  return n;
+}

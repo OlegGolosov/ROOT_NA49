@@ -1,0 +1,16 @@
+/castor/cern.ch/na49/mini-dst/00O/t49run1561.12.root
+/castor/cern.ch/na49/mini-dst/00M_2/t49run1468.42.root
+/castor/cern.ch/na49/mini-dst/00M_2/t49run1468.43.root
+/castor/cern.ch/na49/mini-dst/00N_2/t49run1611.31.root
+/castor/cern.ch/na49/mini-dst/00N_2/t49run1610.11.root
+/castor/cern.ch/na49/mini-dst/00N_2/t49run1598.8.root
+/castor/cern.ch/na49/mini-dst/00N_2/t49run1596.7.root
+/castor/cern.ch/na49/mini-dst/00N_2/t49run1591.81.root
+/castor/cern.ch/na49/mini-dst/00N_2/t49run1591.71.root
+/castor/cern.ch/na49/mini-dst/00N_2/t49run1591.61.root
+/castor/cern.ch/na49/mini-dst/00N_2/t49run1590.30.root
+/castor/cern.ch/na49/mini-dst/00N_2/t49run1590.26.root
+/castor/cern.ch/na49/mini-dst/00N_2/t49run1587.16.root
+/castor/cern.ch/na49/mini-dst/00N_2/t49run1586.21.root
+/castor/cern.ch/na49/mini-dst/00N_2/t49run1586.14.root
+/castor/cern.ch/na49/mini-dst/00N_2/t49run1586.13.root

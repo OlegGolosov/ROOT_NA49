@@ -1,0 +1,71 @@
+#################################################################################
+
+###
+# Name of the macro (change to your own macro name)
+###
+NAME          = V0Example
+
+#################################################################################
+
+ObjSuf        = o
+SrcSuf        = C
+ExeSuf        =
+OutPutOpt     = -o
+
+###
+# ROOT compiler flags
+###
+ROOTCFLAGS    = $(shell root-config --cflags)
+ROOTLDFLAGS   = $(shell root-config --ldflags | sed 's/-pthread //')
+ROOTLIBS      = $(shell root-config --libs)
+ROOTGLIBS     = $(shell root-config --glibs)
+
+###
+# Includefiles for T49
+###
+INCLUDE       = -I$(T49DST)/inc \
+                -I$(T49ANA)/inc 
+
+###
+# Linux with egcs
+###
+CXX           = g++
+CXXFLAGS      = -O -Wall -fPIC
+LD            = g++
+LDFLAGS       = -g
+SOFLAGS       = -shared
+
+###
+# Libraries
+###
+T49LIBS       = -L$(T49DST_LIB) -lT49DST -L$(T49ANA_LIB) -lT49ANA
+DSPACKLIBS    = -L$(DSPACK_HOME)/lib -ltrk -ldb -ldspack \
+                -L/usr/local/lib -lshift -lg2c
+PGFLIBS       = -L$(PGI)/linux86/lib/ -lpgftnrtl -lpgc
+LIBS          = $(ROOTLIBS)
+GLIBS         = $(ROOTGLIBS) $(T49LIBS) (DSPACKLIBS) $(PGFLIBS) 
+
+CXXFLAGS     += $(ROOTCFLAGS) $(INCLUDE)
+LDFLAGS      += $(ROOTLDFLAGS)
+
+#################################################################################
+
+OBJECT       = $(NAME).$(ObjSuf)
+SOURCE       = $(NAME).$(SrcSuf)
+EXEOUT       = $(NAME)$(ExeSuf)
+
+all:            $(EXEOUT)
+
+$(NAME):        $(OBJECT)
+		$(LD) $(LDFLAGS) $(OBJECT) $(GLIBS) $(OutPutOpt) $(EXEOUT)
+		@echo "$(NAME) done"
+
+clean:
+		@rm -f $(OBJECT) *Dict.* core
+
+.SUFFIXES: .$(SrcSuf)
+
+###
+
+.$(SrcSuf).$(ObjSuf):
+	$(CXX) $(CXXFLAGS) -c $<

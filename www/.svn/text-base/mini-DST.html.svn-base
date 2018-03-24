@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta name="keywords" content=
+  "NA49 ROOT mini DST mini-DST Analysis CERN" />
+
+  <title>Existing mini-DSTs</title>
+  <!-- Changed by: Christoph Blume, 6-Apr-2004 -->
+
+  <style type="text/css">
+/*<![CDATA[*/
+  <!--
+  .style1 {color: #0000FF}
+  -->
+  /*]]>*/
+  </style>
+</head>
+
+<body bgcolor="#FFFFFF">
+  <center>
+    <h2 class="style1">ROOT mini-DST's</h2>
+
+    <table border="1">
+      <tr>
+        <th>Production</th>
+
+        <th>Tag</th>
+
+        <th>Comment</th>
+      </tr>
+
+      <tr>
+        <td align="center"><b>XX</b></td>
+
+        <td align="center"><b>XX</b></td>
+
+        <td>xxxxxxxxxxxxxx</td>
+      </tr>
+    </table>
+  </center>
+
+  <center>
+    <hr />
+    <font size="-1"><a href="http://www.cern.ch/">CERN</a> © 2002 -
+    European Laboratory for Particle Physics - NA61</font>
+    <hr />
+  </center>
+</body>
+</html>

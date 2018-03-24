@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta name="keywords" content=
+  "NA49 ROOT mini DST mini-DST Analysis CERN" />
+
+  <title>General Information</title>
+  <style type="text/css">
+/*<![CDATA[*/
+  <!--
+  .style1 {color: #0000FF}
+  -->
+  /*]]>*/
+  </style>
+</head>
+
+<body bgcolor="#FFFFFF">
+  <p><br /></p>
+
+  <h1><b><a name="link1" class="style1" id="link1">General
+  Information</a></b></h1>
+
+  <p>T61 is a development specific for the NA61 experiment of
+  <a href=
+  "http://na49info.web.cern.ch/na49info/na49/Software/minidst/">NA49
+  ROOT</a> mini-DST classes written by <a href=
+  "mailto:Gunther.Roland@cern.ch">Gunther Roland</a>.</p>
+
+  <p>T61 classes are divided into two libraries.</p>
+
+  <p>One <a href="dst/html/USER_Index.html">(T61DST)</a> is
+  containing all classes that are used for storing the DSTs in the
+  mini-DST trees and consists basically of the ROOT61-classes with
+  a number of extensions.<br />
+  The extensions to ROOT61 include on one side additional
+  data-members for each track (see <a href=
+  "dst/html/T49ParticleRoot.html">T49ParticleRoot</a>), which now
+  also contain, e.g., the first and last coordinate of a track in
+  each TPC and the PID, and on the other side classes for the
+  storage of secondary vertices (<a href=
+  "dst/html/T49VertexRoot.html">T49VertexRoot</a>) and Monte Carlo
+  Information (<a href=
+  "dst/html/T49EventMCRoot.html">T49EventMCRoot</a>, <a href=
+  "dst/html/T49ParticleMCRoot.html">T49ParticleMCRoot</a> and
+  <a href=
+  "dst/html/T49VertexMCRoot.html">T49VertexMCRoot</a>).<br /></p>
+
+  <p>The second library <a href=
+  "ana/html/USER_Index.html">(T61ANA)</a> provides all kinds of
+  tools (e.g. event and track cuts, event mixing, dEdx-analysis,
+  etc.) to be used in the analysis of the ROOT mini-DST.</p>
+
+  <p>These two libraries can either be directly loaded via</p>
+
+  <p><tt>gSystem-&gt;Load("libT61DST.so")</tt> and<br />
+  <tt>gSystem-&gt;Load("libT61ANA.so")</tt></p>
+
+  <p>into the standard ROOT, or one might also use the
+  root61-executable that has all these classes already
+  included.<br />
+  The root61 additionally contains the <a href=
+  "rds/html/TRootDS.html">TRootDS</a>-class, originally written by
+  <a href="mailto:Gunther.Roland@cern.ch">Gunther Roland</a>, which
+  allows a direct access to NA61-data in DSPACK format.<br />
+  This way root61 has the same functionality as the former
+  rootds.<br /></p>
+
+  <p><a href="picts/T49DST.gif"><b>Schematic overview of the T61
+  Data Structures</b></a><br /></p>
+
+  <center>
+    <hr />
+    <font size="-1"><a href="http://www.cern.ch/">CERN</a> © 2007 -
+    European Laboratory for Particle Physics - NA61</font>
+    <hr />
+  </center>
+</body>
+</html>

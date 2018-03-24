@@ -1,0 +1,44 @@
+GET_TARGET_PROPERTY(T49DST_LIBRARY T49DST LOCATION)
+
+set(RootDS_SOURCES src/TRootDS.C src/TRootDSMC.C src/TRootDSmini.C src/dspack_rootds.c)
+set(RootDS_public_HEADERS inc/TRootDS.h inc/TRootDSMC.h inc/TRootDSmini.h)
+set(RootDS_HEADERS ${RootDS_public_HEADERS} inc/dspack_rootds.h)
+set(RootDS_str_HEADERS inc/gteval_match_t_root.h inc/gteval_match_user_t_root.h
+  inc/gteval_nt_root.h inc/na49_event_mc_str_root.h inc/na49_event_str_root.h
+  inc/na49_mini_root.h inc/v0find_root.h inc/xi_find_root.h)
+
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ROOT_AUXCFLAGS}")
+
+ROOT_GENERATE_DICTIONARY(RootDS
+  LINKDEF inc/RootDSLinkDef.h
+  INFILES ${RootDS_HEADERS}
+  INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR} ${T49DST_INCLUDE_DIR} ${DSPACK_INCLUDE_DIR}
+)
+LIST(APPEND RootDS_SOURCES ${RootDS_DICT_SOURCE})
+LIST(APPEND RootDS_HEADERS ${RootDS_DICT_HEADER})
+
+ROOT_GENERATE_DICTIONARY(RootDSStr
+  LINKDEF inc/RootDSStrLinkDef.h
+  INFILES ${RootDS_str_HEADERS}
+  INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR} ${T49DST_INCLUDE_DIR} ${DSPACK_INCLUDE_DIR}
+)
+LIST(APPEND RootDS_SOURCES ${RootDSStr_DICT_SOURCE})
+LIST(APPEND RootDS_HEADERS ${RootDSStr_DICT_HEADER})
+
+LIST(APPEND RootDS_INCLUDE_DIRECTORIES
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${ROOTDS_INCLUDE_DIR}
+  ${T49DST_INCLUDE_DIR}
+  ${DSPACK_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${RootDS_INCLUDE_DIRECTORIES})
+
+add_library(RootDS SHARED ${RootDS_SOURCES} ${RootDS_HEADERS})
+
+TARGET_LINK_LIBRARIES(RootDS
+  T49DST
+  ${DSPACK_LIBRARY}
+  ${NA49_hepdb_LIBRARY}
+)
+
+INSTALL(TARGETS RootDS DESTINATION lib)
+install(FILES ${RootDS_public_HEADERS} DESTINATION include/T49/RootDS)

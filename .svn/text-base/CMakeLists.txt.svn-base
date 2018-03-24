@@ -1,0 +1,78 @@
+cmake_minimum_required(VERSION 2.4)
+
+project(T61)
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules")
+INCLUDE(NA61UtilityMacros)
+INCLUDE(NA61ConfigureMacros)
+
+# Default build type
+set(CMAKE_BUILD_TYPE "RelWithDebInfo")
+
+
+find_package(Root REQUIRED)
+find_package(DSPACK)
+find_package(NA61)
+
+
+option(DISABLE_DSPACK
+	"Disable all DSPACK-dependent components" OFF)
+option(DISABLE_PADTRANS
+	"Disable PADTRANS functionality" OFF)
+option(DISABLE_TRKSTEP
+	"Disable TRKSTEP support in T49Trkstep" OFF)
+
+if(DISABLE_DSPACK)
+  set(DISABLE_PADTRANS ON)
+  set(DISABLE_TRKSTEP ON)
+endif(DISABLE_DSPACK)
+
+if(NOT DSPACK_FOUND AND NOT DISABLE_DSPACK)
+  message(FATAL_ERROR "DSPACK support requested yet DSPACK not found!")
+endif(NOT DSPACK_FOUND AND NOT DISABLE_DSPACK)
+if(NOT NA61_FOUND AND (NOT DISABLE_PADTRANS OR NOT DISABLE_TRKSTEP))
+  message(FATAL_ERROR "PADTRANS and TRKSTEP require the NA61 software chain!")
+endif(NOT NA61_FOUND AND (NOT DISABLE_PADTRANS OR NOT DISABLE_TRKSTEP))
+
+message("Disabled features:")
+if(DISABLE_DSPACK)
+  message("\tDSPACK")
+endif(DISABLE_DSPACK)
+if(DISABLE_PADTRANS)
+  message("\tPADTRANS")
+endif(DISABLE_PADTRANS)
+if(DISABLE_TRKSTEP)
+  message("\tTRKSTEP")
+endif(DISABLE_TRKSTEP)
+
+if(INPLACE_BUILD_PATH)
+  set(EXECUTABLE_OUTPUT_PATH "${INPLACE_BUILD_PATH}/bin")
+  set(LIBRARY_OUTPUT_PATH "${INPLACE_BUILD_PATH}/lib")
+  message("Building binaries in place, in ${INPLACE_BUILD_PATH}")
+endif(INPLACE_BUILD_PATH)
+
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ROOT_CXXFLAGS}")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${ROOT_LDFLAGS}")
+set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${ROOT_LDFLAGS}")
+if(DISABLE_DSPACK)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNODS")
+endif(DISABLE_DSPACK)
+if(DISABLE_PADTRANS)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOPADTRANS")
+endif(DISABLE_PADTRANS)
+if(DISABLE_TRKSTEP)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DNOTRKSTEP")
+endif(DISABLE_TRKSTEP)
+
+set(ROOTDS_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/RootDS/inc)
+set(T61ANA_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/T61ANA/inc)
+set(T61DST_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/T61DST/inc)
+
+
+add_subdirectory(T61DST)
+add_subdirectory(T61ANA)
+if(NOT DISABLE_DSPACK)
+  add_subdirectory(RootDS)
+endif(NOT DISABLE_DSPACK)
+add_subdirectory(src)
+add_subdirectory(Documentation)

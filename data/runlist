@@ -1,0 +1,43 @@
+<DST-Label>			<Number of events (claimed)>	<Number of events (got)>	 <Status>	Centrality no tdcal	Centrality tdcal
+=========================================================================================================
+Reference run: 1468.
+std+-160GeV-central-00B		400000				391000				Finished. OK.	yes			no	*
+std+-160GeV-minbias-00M-a	78000				78000				Finished. OK.	yes			yes	**
+std+-160GeV-minbias-00M-b	119000				119000				Finished. OK.	no			no	** x
+std--160GeV-minbias-00N		150000				109000				Finished. OK.	yes			no	** x
+std--160GeV-central-00O		530000				344000				Finished. OK.	yes			yes
+std+-160GeV-central-256TB-01I	3000000				2897000				Finished. OK.	no			no	*** x
+std+-160GeV-minbias-low-int-01J	340000				336000				Finished. OK.	yes			yes
+---------------------------------------------------------------------------------------------------------
+Reference run: .
+1/2std+-80GeV-central-01E	305000				302000				Finished. OK.	yes			yes
+---------------------------------------------------------------------------------------------------------
+Reference run: 3162.
+1/4std--40GeV-central-00C	290000				211000				Finished. OK.	no			no	*
+1/4std+-40GeV-central-00W	420000				411000				Finished. OK.	yes			yes
+1/4std--40GeV-minbias-01D	410000				355000				Finished. OK.	yes			yes	
+1/4std+-40GeV-minbias-02C	430000				386000				Finished. OK.	yes			yes
+---------------------------------------------------------------------------------------------------------
+Reference run: .
+30G+-30GeV-central-02J		440000				417000				Finished. OK.	yes			yes
+30G+-30GeV-semi-central-05A	227031				212000				Finished. OK.	yes			yes
+---------------------------------------------------------------------------------------------------------
+Reference run: .
+20G+-20GeV-central-03A		360000				349000				Finished. OK.	yes			yes
+20G+-20GeV-semi-central-05B	316529				256000				Finished. OK.	yes			yes
+---------------------------------------------------------------------------------------------------------
+Reference run: .
+std+-160GeV-SiSi-00X		410000				318000				Finished. OK.	yes			yes (taken from below)
+std+-160GeV-SiSi-00X-dedx	410000				364000				Finished. OK.	yes			yes
+---------------------------------------------------------------------------------------------------------
+Reference run: .
+1/4std+-40GeV-SiSI-01G		140000				94000				Finished. OK.	yes			yes
+---------------------------------------------------------------------------------------------------------
+Reference run: .
+std+-160GeV-CC-00V-10mm-a	176000				176000				Finished. OK.	no			no (not recommended to use dataset)
+std+-160GeV-CC-00V-10mm-b	201000				201000				Finished. OK.	yes			yes
+std+-160GeV-CC-00V-3mm		44000				44000				Finished. OK.	no			no	*
+---------------------------------------------------------------------------------------------------------
+Reference run: .
+1/4std+-40GeV-CC-01F		250000				203000				Finished. OK.	yes			yes
+---------------------------------------------------------------------------------------------------------

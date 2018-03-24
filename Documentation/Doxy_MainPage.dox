@@ -1,0 +1,32 @@
+/**
+   \mainpage
+
+   <center>
+     <br>
+     <br>
+      <table border="0" cellpadding="20">
+      <tr>
+       <td>
+        <center> Software Package for <a href="http://www.cern.ch/na61">NA61</a> </center>
+       </td>
+       <td>
+        <br>
+        The \ref changepage contains synopses of new features.
+        <br>
+	See also \ref installpage
+        <br>
+       </td>
+    </tr>
+    </table>
+   </center>
+*/
+
+/*!
+\page changepage Change log
+\verbinclude CHANGES
+*/
+
+/*!
+\page installpage Install instructions
+\verbinclude README
+*/

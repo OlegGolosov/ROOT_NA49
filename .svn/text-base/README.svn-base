@@ -1,0 +1,93 @@
+			Building and Installing T61
+			Marek Szuba, 2011.03.10
+
+1. Foreword
+
+T61 is built and installed using CMake - a modern build system which can
+automatically create make files tuned to the system on which it is run.
+Conceptually, CMake is quite similar to the established GNU Autoconf system,
+it is however both somewhat more flexible and significantly easier to work with
+as a developer.
+
+
+2a. For the impatient: a working example
+
+The following snippet of code can be used to build T61, with all the features
+enabled, on lxPlus/SLC5 and install it along the rest of the NA61/SHINE
+software chain - i.e. the way we have been doing it so far:
+
+	cd /path/to/T61
+	mkdir build
+	cd build
+	CC='gcc34' CXX='g++34' cmake -DCMAKE_INSTALL_PREFIX=${NA49_ROOT} ..
+	make
+	make install
+	cd ..
+	rm -r build
+
+
+2b. What's that all about? 
+
+To begin with, we enter the build directory. CMake makes it trivial to build
+binaries outside the source tree, which greatly simplifies a lot of things.
+Here, our build directory is a subdirectory of the source-tree root, named
+'build'. One could of course still do without a dedicated build directory;
+figuring out how to do this is left as a (very simple) exercise to the reader.
+
+Secondly, we invoke cmake so that it can locate all the necessary dependencies,
+parse the options we pass to it and create make files. Passing the names of
+the C and the C++ compiler is handled using environment variables; it could
+also be done via options passed to cmake but under Linux, both approaches
+work just as well. What we do pass as an option is the target directory
+for installing T61: root61 will then be installed in $NA49_ROOT/bin, all the
+libraries in $NA49_ROOT/lib - and so on.
+
+Finally, we build and install T61 using the good old make, then get rid of
+all the intermediate files in one fell swoop by deleting the whole build
+directory. Should you want to keep the output of CMake but not that of the
+compiler and the linker, substitute the last two lines with 'make clean'.
+
+
+3. Configuring T61
+
+One of the great advantages of build systems such as Autoconf or CMake
+is that they make it easy to enable and disable various compile-time
+features of the software they manage. In case of CMake this is done by
+passing it appropriate "KEY=value" pairs - which in turn can be done either
+using a user-friendly configuration interface such as 'ccmake' (for text
+consoles) or 'cmake-gui' (for windowing systems), or using the command-line
+option '-D' the way we set CMAKE_INSTALL_PREFIX above.
+
+At present T61 understands three compile-time custom feature switches:
+ - DISABLE_PADTRANS - disable the ROOT interface to the PADTRANS package.
+   The class T49Padtrans remains available, however calling any of its
+   methods results in a "not supported" message;
+ - DISABLE_TRKSTEP - disable the Fortran magnetic-field tracker from the
+   TRKSTEP package, with field maps loaded using DSPACK. This forces
+   T49Trkstep to use its internal C++ rewrite of TRKSTEP code along with
+   ROOT-file field maps provided by T49MagneticField;
+ - DISABLE_DSPACK - disable DSPACK support altogether, i.e. in addition
+   to implying the aforementioned two options do not build the code for
+   reading NA61 DSTs.
+
+The first and the third of these options possess equivalents in the old
+make files - 'make nopadtrans' and 'make nods', respectively. At present
+the old make files do not support disabling TRKSTEP.
+
+In addition to the custom options, CMake understands a number of common
+settings which control the build and install processes. One of such options
+is the aforementioned CMAKE_INSTALL_PREFIX, specifying the destination
+directory for the install phase. Another worth mentioning is CMAKE_BUILD_TYPE,
+which in turn controls the trade-off between optimisation and ease of
+binary-level debugging: by default CMake compiles T61 with both reasonably
+well-behaved speed optimisations and debug symbols, should you however
+prefer something else you can change it here. See CMake documentation for
+more information on this subject.
+
+
+4. See also
+
+For further information about CMake, please see the project's Web site:
+
+http://www.cmake.org/
+

@@ -1,0 +1,81 @@
+*******************************************************************************
+*
+* T49 ROOT mini-DST libraries
+*
+*******************************************************************************
+
+1) General
+----------
+
+The NA49 ROOT mini-DST classes are divided in two libraries. One (T49DST) is 
+containing all classes that are used to for storing the DSTs in the mini-DST trees and 
+consists basically of the ROOT49-classes with a number of extensions. The ROOT49 class 
+collection (mainly developed and maintained by Gunther Roland) has already been extensively
+used for data analysis in NA49 and serves now as the foundation of the T49 analysis framework. 
+The extensions to ROOT49 include on one side additional data-members for each track 
+(see T49ParticleRoot / T40ParticleIdRoot), which now also contain the first and last coordinate 
+of a track in each chamber and the PID, and on the other side classes for the storage of secondary 
+vertices (T4VertexRoot) and Monte Carlo Information (T49EventMCRoot, T49ParticleMCRoot, 
+and T49VertexMCRoot). The usage of version dependend streamer functions ensures the backward 
+compability of libT49DST. This means that it should be possible to read old ROOT49 mini-DSTs 
+using the T49DST-library. On the other hand it should also work to read new mini-DSTs, created with 
+T49DST-classes, with root49, however without access to the additional data members.
+  The second library (T49ANA) includes all types of analysis-classes that can be used 
+to analyze the root mini-DSTs.
+  These two libraries can either be directly loaded via gSystem->Load("libT49DST.so") and
+gSystem->Load("libT49ANA.so") into the standard ROOT, or one might also use the root49-executable
+that has all these classes already included. The root49 additionally contains the TRootDS-class,
+originally written by G. Roland, which allows a direct access to NA49-data in DSPACK format.
+This way root49 has the same functionality than the former rootds. 
+
+2) Installation
+---------------
+
+The T49DST and T49ANA libraries are part of the local-branch of the NA49 library and can
+be used on the NA49-Linux-PCs (na49i01-10). To do so, you should add the following to 
+your .rootrc:
+       # Path used by dynamic loader to find shared libraries
+       *.Root.DynamicPath:    .:$ROOTSYS/lib:$NA49/local/lib
+Make sure the that the NA49-environmentals are all set:
+       setenv NA49_LEVEL new
+       source $NA49/etc/na49_env.csh
+In order to use the database of existing root mini-DSTs at CERN define the variable ROOT49 as:
+       setenv ROOT49 /shift/na49i02/data1/root49-mdst/DST 
+
+If you want to install the libraries on your own, follow this procedure:
+  * Make sure that root is installed properly on your machine.
+  * Create a top-directory (e.g. T49) on your machine.
+  * Add the following lines to your .(t)cshrc:
+       setenv NA49_ARCH       Linux
+       setenv T49             <your topdirectory>
+       setenv T49DST          "$T49/T49DST"
+       setenv T49DST_LIB      "$T49DST/lib"
+       setenv T49ANA          "$T49/T49ANA"
+       setenv T49ANA_LIB      "$T49ANA/lib"
+       setenv NEW_PATH        "$T49DST_LIB":"$T49ANA_LIB"
+       setenv LD_LIBRARY_PATH "$NEW_PATH":"$LD_LIBRARY_PATH"
+       setenv NEW_PATH        "$T49/bin"
+       setenv PATH            "$NEW_PATH":"$PATH"
+  * In the T49/dist-directory of the NA49-library (local-branch) you can find the the file
+    T49.tar.gz. Copy this file to your top-directory and unpack it with the command
+       tar -xvzf T49.tar.gz
+    This will create the directory tree and write out the source- and header-files.
+  * Create the directories bin, T49DST/lib and T49ANA/lib.
+  * Create the libraries by executing make nods. If everything went fine, 
+    you should find root49 in bin, libT49DST.so in T49DST/lib and libT49ANA.so in T49ANA/lib.
+    Note that make nods creates a root49 executable that does not contain the TRootDS classes.
+    in case you have installed DSPACK properly on your machine, you could also do a
+    simple make, which will then also give you access to DSPACK data.
+  * Add the following to your .rootrc:
+       # Path used by dynamic loader to find shared libraries
+       *.Root.DynamicPath:    .:$ROOTSYS/lib:$T49DST_LIB:$T49ANA_LIB
+  * If you are using mini-DST copies somewhere else than at CERN, you have to define ROOT49
+    accordingly:
+       setenv ROOT49     <your directory containing .root49dsts>
+
+
+
+
+
+
+

@@ -1,0 +1,65 @@
+# - Try to find NA61 software
+# Once done, this will define
+#
+#  NA61_FOUND - system has NA61 software
+#  NA61_INCDIR - location of public NA61 header files
+#  NA61_LIBDIR - location of NA61 libraries
+#  NA61_hepdb_LIBRARY - location and full name of libdb
+#  NA61_padtrans_LIBRARY - location and full name of libpadtrans
+#  NA61_trkstep_LIBRARY - location and full name of libtrk
+#  NA61_unpack_mbrd_LIBRARY - location and full name of libunpack_mbrd
+
+macro(is_undefined_symbol_in_library _returnVar)
+  parse_arguments(isinlib
+    "LIBRARY;SYMBOL"
+    ""
+    ${ARGN}
+  )
+  execute_process(COMMAND nm ${isinlib_LIBRARY}
+                  COMMAND grep -q "U ${isinlib_SYMBOL}"
+                  RESULT_VARIABLE _grepResult)
+  if(${_grepResult} EQUAL 0)
+    set(${_returnVar} TRUE)
+  else(${_grepResult} EQUAL 0)
+    set(${_returnVar} FALSE)
+  endif(${_grepResult} EQUAL 0)
+endmacro(is_undefined_symbol_in_library)
+
+
+set(NA61_DIR $ENV{NA49_ROOT})
+if(NA61_DIR AND EXISTS ${NA61_DIR})
+  set(NA61_FOUND TRUE)
+endif(NA61_DIR AND EXISTS ${NA61_DIR})
+
+if(NA61_FOUND)
+  message(STATUS "NA61 software-chain location: ${NA61_DIR}")
+else(NA61_FOUND)
+  message(STATUS "Couldn't locate NA61 software chain")
+endif(NA61_FOUND)
+
+if (NA61_FOUND)
+  find_package(DSPACK)
+  find_package(PGIFortran)
+  set(NA61_INCDIR ${NA61_DIR}/inc)
+  set(NA61_unpack_mbrd_INCDIR ${NA61_DIR}/Utilities/UnpackMBRD)
+  set(NA61_LIBDIR ${NA61_DIR}/lib)
+  find_library(NA61_hepdb_LIBRARY NAMES db PATHS ${NA61_LIBDIR} ${NA61_DIR}/Reconstruction/HEPDB/lib NO_DEFAULT_PATH)
+  find_library(NA61_padtrans_LIBRARY NAMES padtrans PATHS ${NA61_LIBDIR} ${NA61_DIR}/Reconstruction/PADTRANS/lib NO_DEFAULT_PATH)
+  find_library(NA61_trkstep_LIBRARY NAMES trk PATHS ${NA61_LIBDIR} ${NA61_DIR}/Reconstruction/TRKSTEP/lib NO_DEFAULT_PATH)
+  find_library(NA61_unpack_mbrd_LIBRARY NAMES unpack_mbrd PATHS ${NA61_LIBDIR} ${NA61_DIR}/Utilities/UnpackMBRD/Linux NO_DEFAULT_PATH)
+  is_undefined_symbol_in_library(_hepdb_needs_pgf LIBRARY ${NA61_hepdb_LIBRARY} SYMBOL "ftn_strcmp")
+  is_undefined_symbol_in_library(_trkstep_needs_pgf LIBRARY ${NA61_trkstep_LIBRARY} SYMBOL "ftn_i_sign")
+  # Define link dependencies for braindead/static libraries. Warning: watch the order!!!
+  list(APPEND NA61_hepdb_LIBRARY
+    ${DSPACK_LIBRARY}
+  )
+  if(_hepdb_needs_pgf OR _trkstep_needs_pgf)
+    message(STATUS "Adding PGF libs to link dependencies")
+    if(_hepdb_needs_pgf)
+      list(APPEND NA61_hepdb_LIBRARY ${PGIFortran_LIBRARIES})
+    endif(_hepdb_needs_pgf)
+    if(_trkstep_needs_pgf)
+      list(APPEND NA61_trkstep_LIBRARY ${PGIFortran_LIBRARIES})
+    endif(_trkstep_needs_pgf)
+  endif(_hepdb_needs_pgf OR _trkstep_needs_pgf)
+endif (NA61_FOUND)
