@@ -5,6 +5,8 @@ using namespace std;
 #include "T49OnePeak.h"
 #include "TMath.h"
 #include "TStyle.h"
+#include "TStyle.h"
+#include "TBuffer.h"
 #include "TROOT.h"
 
 //____________________________________________________________________
@@ -31,7 +33,7 @@ T49OnePeak::T49OnePeak(Char_t* name): TF1()
   fXmin      = 0.5;
   fXmax      = 2.0;
   fNpx       = 100;
-  fType      = 0;
+  fType      = EFType::kFormula;
   if (fNpar) {
     fNames      = new TString[fNpar];
     fParams     = new Double_t[fNpar];

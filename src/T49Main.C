@@ -36,7 +36,7 @@
 
 extern void InitGui();
 
-int Error;  // needed by Motif
+//int Error;  // needed by Motif
 
 VoidFuncPtr_t initfuncs[] = { InitGui, 0 };
 

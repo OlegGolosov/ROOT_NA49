@@ -9,6 +9,7 @@
 //#include "TVirtualFitter.h"
 #include "TMath.h"
 #include "TVector.h"
+#include "TBuffer.h"
 
 //____________________________________________________________________
 //  dE/dx fit function class
@@ -48,7 +49,7 @@ T49SumGaus::T49SumGaus(Char_t* name): TF1()
   fXmin      = 0.5;
   fXmax      = 2.0;
   fNpx       = 100;
-  fType      = 0;
+  fType      = EFType::kFormula;
   //  fFunction  = 0;
   fNdim      = 1;
   if (fNpar) {

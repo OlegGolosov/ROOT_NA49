@@ -1,5 +1,6 @@
 #include "T49DedxInfo.h"
 #include "TClass.h"
+#include "TBuffer.h"
 
 ClassImp(T49DedxInfo);
 
