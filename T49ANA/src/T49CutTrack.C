@@ -16,6 +16,7 @@
 #include <TArrayI.h>
 #include <TObjArray.h>
 #include <TF1.h>
+#include <TBuffer.h>
 
 #include "T49ParticleRoot.h"
 
